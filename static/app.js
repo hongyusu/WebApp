@@ -118,7 +118,7 @@ $(document).ready(function(){
 					
 					if(d['status'] == 0){
 						$.each(d['items'], function(i, item){
-							rows.push([item,d['scores'][i]]);
+							rows.push([item.substring(1, 90),d['scores'][i]]);
 							});		    
 							};
 							
@@ -137,12 +137,12 @@ $(document).ready(function(){
 					      .enter().append("tr");
 
 					  var td = tr.selectAll("td")
-					        .data(function(d) { return [d[1],d[0].substring(1, 30)]; })
+					        .data(function(d) { return [d[1],d[0]]; })
 					      .enter().append("td")
 					        .text(function(d) { return d; });
 
 					  var width = 130,
-					      height = d3.select("table")[0][0].clientHeight,
+					      height = d3.select("table")[0][0].clientHeight-50,
 					      mx = 10,
 					      radius = 2;
 					
@@ -160,11 +160,13 @@ $(document).ready(function(){
 				      .attr("height", height);
 
 				  var maxMu = 0;
+  				var minMu = 1;
+				/*
 				  var minMu = Number.MAX_VALUE;
 				  for (i=0; i < rows.length; i++) {
 				    if (rows[i][1] > maxMu) { maxMu = rows[i][1]; }
 				    if (rows[i][1] < minMu) { minMu = rows[i][1]; }
-				  }
+				  }*/
 				
 				  var dates = rows.map(function(t,i) { return i; });
 
@@ -182,7 +184,7 @@ $(document).ready(function(){
 				    .enter().append("text")
 				      .attr("class", "xaxislabel")
 				      .attr("x", function(d) { return xscale(d); })
-				      .attr("y", 10)
+				      .attr("y", 5)
 				      .attr("text-anchor", "middle")
 				      .text(String)
 
@@ -191,7 +193,7 @@ $(document).ready(function(){
 				    .enter().append("line")
 				      .attr("x1", function(d) { return xscale(d); })
 				      .attr("x2", function(d) { return xscale(d); })
-				      .attr("y1", 10)
+				      .attr("y1", 5)
 				      .attr("y2", height)
 				      .attr("stroke", "#eee")
 				      .attr("stroke-width", 1);

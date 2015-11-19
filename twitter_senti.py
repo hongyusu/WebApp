@@ -13,9 +13,13 @@ api = tweepy.API(auth)
 
 def get_by_hashtag(hashtag):
     print hashtag
-    tweets = api.search(hashtag, count=30)
+    try:
+        tweets = api.search(hashtag, count=30)
+    except Exception as err:
+        print err
     tweets = [tweet.text for tweet in tweets]
-    scores = sentiment.sentiment_scores_of_tweets(tweets)
+    #scores = sentiment.sentiment_scores_of_tweets(tweets)
+    scores = sentiment.sentiment_scores_of_sents(tweets).tolist()
     print scores
     res = {}
     if tweets:
