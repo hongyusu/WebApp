@@ -26,9 +26,7 @@ def index(name=None):
 @app.route('/action1', methods=['POST'])
 def action1(name=None):
     data = request.get_json()
-    print('--------------within twitter call--------------')
     data = twitter_senti.get_by_hashtag(data)
-    print('--------------after twitter call--------------')
     return flask.jsonify(data)
 
 

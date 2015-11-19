@@ -114,11 +114,11 @@ $(document).ready(function(){
 				data: JSON.stringify(action1Data),
 				dataType:'json',
 				success: function(d){
+					$('#action1Meanscore').html(d['meanscore'].toFixed(3));
 					var rows = [];
-					
 					if(d['status'] == 0){
 						$.each(d['items'], function(i, item){
-							rows.push([item.substring(1, 90),d['scores'][i]]);
+							rows.push([item.substring(1, 90),d['scores'][i].toFixed(3)]);
 							});		    
 							};
 							

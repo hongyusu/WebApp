@@ -20,12 +20,12 @@ def get_by_hashtag(hashtag):
     tweets = [tweet.text for tweet in tweets]
     #scores = sentiment.sentiment_scores_of_tweets(tweets)
     scores = sentiment.sentiment_scores_of_sents(tweets).tolist()
-    print scores
     res = {}
     if tweets:
         res['status'] = 0
         res['items'] = tweets
         res['scores'] = scores
+        res['meanscore'] = sum(scores)/len(scores)
     return res
     pass
 
