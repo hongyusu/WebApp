@@ -15,12 +15,13 @@ def get_by_hashtag(hashtag):
     print hashtag
     tweets = api.search(hashtag, count=5)
     tweets = [tweet.text for tweet in tweets]
-    scores = sentiment.sentiment_scores_of_sents(tweets)
+    scores = sentiment.sentiment_scores_of_tweets(tweets)
     print scores
     res = {}
     if tweets:
         res['status'] = 0
         res['items'] = tweets
+        res['scores'] = scores
     return res
     pass
 

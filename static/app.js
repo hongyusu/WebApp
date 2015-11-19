@@ -101,29 +101,129 @@ $(document).ready(function(){
 	e.preventDefault();
     }).click();
 
-    $("button#action1").on("click", function(e){
-	var action1Data = $('#action1Input').val().toString();
-	//var post_data = getFormData();
-	$.ajax({
-	    url: '/action1',
-	    type: 'POST',
-	    contentType:'application/json',
-	    data: JSON.stringify(action1Data),
-	    dataType:'json',
-	    success: function(d){
-		console.log(d)
-		//On ajax success do this
+
+
 		
-		if(d['status'] == 0){
-		    $.each(d['items'], function(i, item){
-			$('ul.mate_list').append('<li>' + item + ' </li>');
-		    });		    
-		}
-		else{
-		    $('#partnerResult .lead').text(d['msg']);
-		}
-		$('#action1Results').show();
-		loader.hide();
+		
+		$("button#action1").on("click", function(e){
+			var action1Data = $('#action1Input').val().toString();
+			$.ajax({
+				url: '/action1',
+				type: 'POST',
+				contentType:'application/json',
+				data: JSON.stringify(action1Data),
+				dataType:'json',
+				success: function(d){
+					var rows = [];
+					
+					if(d['status'] == 0){
+						$.each(d['items'], function(i, item){
+							rows.push([item,d['scores'][i]]);
+							});		    
+							};
+							
+					// table
+					d3.select('table').remove();
+					var table = d3.select("#action1Plots").append("table");
+				      thead = table.append("thead");
+				      tbody = table.append("tbody");
+
+				  thead.append("th").text("Score");
+				  thead.append("th").text("Tweet");
+				  thead.append("th").text("Curve");
+				
+					var tr = tbody.selectAll("tr")
+					      .data(rows)
+					      .enter().append("tr");
+
+					  var td = tr.selectAll("td")
+					        .data(function(d) { return [d[1],d[0]]; })
+					      .enter().append("td")
+					        .text(function(d) { return d; });
+
+					  var width = 130,
+					      height = d3.select("table")[0][0].clientHeight,
+					      mx = 10,
+					      radius = 2;
+					
+					
+					
+				  // Now add the chart column
+				  d3.select("#action1Plots tbody tr").append("td")
+				    .attr("id", "chart")
+				    .attr("width", width + "px")
+				    .attr("rowspan", rows.length);
+
+				  var chart = d3.select("#chart").append("svg")
+				      .attr("class", "chart")
+				      .attr("width", width)
+				      .attr("height", height);
+
+				  var maxMu = 0;
+				  var minMu = Number.MAX_VALUE;
+				  for (i=0; i < rows.length; i++) {
+				    if (rows[i][1] > maxMu) { maxMu = rows[i][1]; }
+				    if (rows[i][1] < minMu) { minMu = rows[i][1]; }
+				  }
+				
+				  var dates = rows.map(function(t,i) { return i; });
+
+				  var xscale = d3.scale.linear()
+				    .domain([minMu, maxMu])
+				    .range([mx, width-mx])
+				    .nice();
+				
+				  var yscale = d3.scale.ordinal()
+				    .domain(dates)
+				    .rangeBands([0, height]);
+
+				  chart.selectAll(".xaxislabel")
+				      .data(xscale.ticks(2))
+				    .enter().append("text")
+				      .attr("class", "xaxislabel")
+				      .attr("x", function(d) { return xscale(d); })
+				      .attr("y", 10)
+				      .attr("text-anchor", "middle")
+				      .text(String)
+
+				  chart.selectAll(".xaxistick")
+				      .data(xscale.ticks(2))
+				    .enter().append("line")
+				      .attr("x1", function(d) { return xscale(d); })
+				      .attr("x2", function(d) { return xscale(d); })
+				      .attr("y1", 10)
+				      .attr("y2", height)
+				      .attr("stroke", "#eee")
+				      .attr("stroke-width", 1);
+
+				  chart.selectAll(".line")
+				      .data(rows)
+				    .enter().append("line")
+				      .attr("x1", function(d) { return xscale(d[1]); })
+				      .attr("y1", function(d,i) { return yscale(i) + yscale.rangeBand()/2; })
+				      .attr("x2", function(d,i) { return rows[i+1] ? xscale(rows[i+1][1]) : xscale(d[1]); })
+				      .attr("y2", function(d,i) { return rows[i+1] ? yscale(i+1) + yscale.rangeBand()/2 : yscale(i) + yscale.rangeBand()/2; })
+				      .attr("stroke", "#777")
+				      .attr("stroke-width", 1);
+
+				  var pt = chart.selectAll(".pt")
+				      .data(rows)
+				    .enter().append("g")
+				      .attr("class", "pt")
+				      .attr("transform", function(d,i) { return "translate(" + xscale(d[1]) + "," + (yscale(i) + yscale.rangeBand()/2) + ")"; });
+
+				  pt.append("circle")
+				      .attr("cx", 0)
+				      .attr("cy", 0)
+				      .attr("r", radius)
+				      .attr("opacity", .5)
+				      .attr("fill", "#ff0000");
+								
+								
+				$('#action1Plot').show();
+				
+				
+				
 	    },
 	    error: function(xhr, ajaxOptions, thrownError) {
 		if (xhr.status == 200) {

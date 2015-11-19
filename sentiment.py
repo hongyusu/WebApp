@@ -3,6 +3,7 @@ Sentiment prediction module
 """
 import nltk
 import numpy as np
+import random
 
 from cPickle import load
 
@@ -76,3 +77,8 @@ def sentiment_scores_of_sents(sents):
 def sentiment_score(sent):
     """simple wrapper around the more general case"""
     return sentiment_scores_of_sents([sent])[0]
+
+
+def sentiment_scores_of_tweets(tweets):
+    return [random.randrange(1,100,1)/100.0 for tweet in tweets]
+    pass

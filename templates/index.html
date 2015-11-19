@@ -59,6 +59,28 @@ Plan your trip
   padding-left: 20px;
   padding-right: 20px;
   }
+
+
+table {
+  border-collapse: collapse;
+}
+th {
+  border-bottom: 2px solid #ddd;
+  padding: 8px;
+  font-weight: bold;
+}
+td {
+  padding: 8px;
+  border-top: 1px solid #ddd;
+}
+#chart {
+  padding: 0px;
+}
+.xaxislabel {
+  font-size: 9px;
+}
+
+
 </style>
 {% endblock %}
 
@@ -80,13 +102,13 @@ Plan your trip
 	</div> 
 </form>
 
-<div id="action1Results" class="text-center">
+<div id="" class="text-center">
   <div class="starter-template">
     <h1>Results</h1>    
   </div>
-  <p class="lead"></p>
-  <ul class="mate_list"></ul>
 </div>
+<div id="action1Plots"></div>
+
 
 
 </div>
