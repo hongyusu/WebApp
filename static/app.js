@@ -137,7 +137,7 @@ $(document).ready(function(){
 					      .enter().append("tr");
 
 					  var td = tr.selectAll("td")
-					        .data(function(d) { return [d[1],d[0]]; })
+					        .data(function(d) { return [d[1],d[0].substring(1, 30)]; })
 					      .enter().append("td")
 					        .text(function(d) { return d; });
 
