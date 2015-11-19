@@ -13,7 +13,7 @@ api = tweepy.API(auth)
 
 def get_by_hashtag(hashtag):
     print hashtag
-    tweets = api.search(hashtag, count=5)
+    tweets = api.search(hashtag, count=30)
     tweets = [tweet.text for tweet in tweets]
     scores = sentiment.sentiment_scores_of_tweets(tweets)
     print scores
