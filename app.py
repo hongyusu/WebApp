@@ -16,7 +16,7 @@ def add_header(response):
     and also to cache the rendered page for 10 minutes.
     """
     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-    response.headers['Cache-Control'] = 'public, max-age=0'
+    response.headers['Cache-Control']   = 'public, max-age=0'
     return response
 
 @app.route('/')
@@ -25,15 +25,14 @@ def index(name=None):
 
 @app.route('/action1', methods=['POST'])
 def action1(name=None):
-    data = request.get_json()
-    data = twitter_senti.get_by_hashtag(data)
+    ht = request.get_json()
+    data = twitter_senti.get_by_hashtag(ht)
     return flask.jsonify(data)
 
-
-
-
 app.debug = True
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
+
+
